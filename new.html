@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PARTHH BROWSER</title>
+
+<style>
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: #080808;
+    color: white;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    background: #181818;
+    padding: 20px;
+    border-bottom: 1px solid #333;
+    font-size: 22px;
+    font-weight: bold;
+    letter-spacing: 2px;
+}
+
+header span {
+    color: #999;
+}
+
+.toolbar {
+    display: flex;
+    gap: 8px;
+    padding: 12px;
+    background: #181818;
+}
+
+button {
+    background: #292929;
+    color: white;
+    border: 1px solid #444;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #444;
+}
+
+input {
+    flex: 1;
+    min-width: 0;
+    background: #252525;
+    border: 1px solid #444;
+    color: white;
+    padding: 12px;
+    border-radius: 25px;
+    outline: none;
+}
+
+.home {
+    text-align: center;
+    padding: 100px 20px;
+}
+
+h1 {
+    font-size: 42px;
+    letter-spacing: 5px;
+}
+
+h1 span {
+    color: #999;
+}
+
+p {
+    color: #999;
+    margin-top: 15px;
+}
+
+.search {
+    display: flex;
+    max-width: 600px;
+    margin: 35px auto;
+    gap: 8px;
+}
+
+.search button {
+    background: #bbb;
+    color: black;
+    font-weight: bold;
+}
+
+.shortcuts {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+#status {
+    margin-top: 30px;
+    color: #888;
+}
+
+</style>
+</head>
+
+<body>
+
+<header>
+    PARTHH <span>BROWSER</span>
+</header>
+
+<div class="toolbar">
+    <button onclick="goHome()">⌂</button>
+
+    <input
+        id="address"
+        placeholder="Search or enter website address"
+        onkeydown="if(event.key==='Enter') navigate()">
+
+    <button onclick="navigate()">GO</button>
+</div>
+
+<div class="home" id="home">
+
+    <h1>PARTHH <span>BROWSER</span></h1>
+
+    <p>Your Privacy. Your Control.</p>
+
+    <div class="search">
+
+        <input
+            id="searchInput"
+            placeholder="Search anything..."
+            onkeydown="if(event.key==='Enter') searchWeb()">
+
+        <button onclick="searchWeb()">SEARCH</button>
+
+    </div>
+
+    <div class="shortcuts">
+
+        <button onclick="openSite('https://www.google.com')">
+            Google
+        </button>
+
+        <button onclick="openSite('https://www.youtube.com')">
+            YouTube
+        </button>
+
+        <button onclick="openSite('https://www.wikipedia.org')">
+            Wikipedia
+        </button>
+
+    </div>
+
+    <div id="status">
+        PARTHH BROWSER • Desktop Prototype
+    </div>
+
+</div>
+
+<script>
+
+let currentURL = '';
+
+function searchWeb() {
+
+    const query =
+        document.getElementById('searchInput').value.trim();
+
+    if (!query) return;
+
+    openSite(
+        'https://www.google.com/search?q=' +
+        encodeURIComponent(query)
+    );
+}
+
+function navigate() {
+
+    let value =
+        document.getElementById('address').value.trim();
+
+    if (!value) return;
+
+    if (value.includes(' ')) {
+        openSite(
+            'https://www.google.com/search?q=' +
+            encodeURIComponent(value)
+        );
+        return;
+    }
+
+    if (!value.startsWith('http://') &&
+        !value.startsWith('https://')) {
+
+        if (!value.includes('.')) {
+            openSite(
+                'https://www.google.com/search?q=' +
+                encodeURIComponent(value)
+            );
+            return;
+        }
+
+        value = 'https://' + value;
+    }
+
+    openSite(value);
+}
+
+function openSite(url) {
+
+    try {
+
+        const parsed = new URL(url);
+
+        if (!['http:', 'https:'].includes(parsed.protocol)) {
+            throw new Error('Invalid protocol');
+        }
+
+        currentURL = parsed.href;
+
+        document.getElementById('address').value =
+            currentURL;
+
+        window.open(currentURL, '_blank');
+
+        document.getElementById('status').textContent =
+            'Website opened in your default browser.';
+
+    } catch (error) {
+
+        alert('Please enter a valid website address.');
+
+    }
+}
+
+function goHome() {
+
+    document.getElementById('address').value = '';
+
+    document.getElementById('status').textContent =
+        'PARTHH BROWSER • Desktop Prototype';
+
+}
+
+function openSiteShortcut(url) {
+    openSite(url);
+}
+
+</script>
+
+</body>
+</html>
